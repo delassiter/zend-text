@@ -273,8 +273,8 @@ class Figlet
         }
 
         // If no font was defined, load default font
-        if (!$this->fontLoaded) {
-            $this->_loadFont(__DIR__ . '/zend-framework.flf');
+        if (! $this->fontLoaded) {
+            $this->loadFont(__DIR__ . '/zend-framework.flf');
         }
     }
 
@@ -307,7 +307,7 @@ class Figlet
      */
     public function setFont($font)
     {
-        $this->_loadFont($font);
+        $this->loadFont($font);
         return $this;
     }
 
@@ -389,7 +389,7 @@ class Figlet
             $this->smushOverride = self::SMO_YES;
         }
 
-        $this->_setUsedSmush();
+        $this->setUsedSmush();
 
         return $this;
     }
@@ -405,7 +405,7 @@ class Figlet
      */
     public function render($text, $encoding = 'UTF-8')
     {
-        if (!is_string($text)) {
+        if (! is_string($text)) {
             throw new Exception\InvalidArgumentException('$text must be a string');
         }
 
@@ -414,7 +414,7 @@ class Figlet
 
         // Convert $text to UTF-8 and check encoding
         $text = $strWrapper->convert($text);
-        if (!StringUtils::isValidUtf8($text)) {
+        if (! StringUtils::isValidUtf8($text)) {
             throw new Exception\UnexpectedValueException('$text is not encoded with ' . $encoding);
         }
 
@@ -423,7 +423,7 @@ class Figlet
         $this->output     = '';
         $this->outputLine = [];
 
-        $this->_clearLine();
+        $this->clearLine();
 
         $this->outlineLengthLimit    = ($this->outputWidth - 1);
         $this->inCharLineLengthLimit = ($this->outputWidth * 4 + 100);
@@ -436,9 +436,9 @@ class Figlet
             // Handle paragraphs
             $char = $strWrapper->substr($text, $charNum, 1);
 
-            if ($char === "\n" && $this->handleParagraphs && !$lastCharWasEol) {
+            if ($char === "\n" && $this->handleParagraphs && ! $lastCharWasEol) {
                 $nextChar = $strWrapper->substr($text, ($charNum + 1), 1);
-                if (!$nextChar) {
+                if (! $nextChar) {
                     $nextChar = null;
                 }
 
@@ -448,11 +448,11 @@ class Figlet
             $lastCharWasEol = (ctype_space($char) && $char !== "\t" && $char !== ' ');
 
             if (ctype_space($char)) {
-                $char = ($char === "\t" || $char === ' ') ? ' ': "\n";
+                $char = ($char === "\t" || $char === ' ') ? ' ' : "\n";
             }
 
             // Skip unprintable characters
-            $ordChar = $this->_uniOrd($char);
+            $ordChar = $this->uniOrd($char);
             if (($ordChar > 0 && $ordChar < 32 && $char !== "\n") || $ordChar === 127) {
                 continue;
             }
@@ -475,38 +475,38 @@ class Figlet
                 }
 
                 if ($char === "\n") {
-                    $this->_appendLine();
+                    $this->appendLine();
                     $wordBreakMode = false;
-                } elseif ($this->_addChar($char)) {
+                } elseif ($this->addChar($char)) {
                     if ($char !== ' ') {
-                        $wordBreakMode = ($wordBreakMode >= 2) ? 3: 1;
+                        $wordBreakMode = ($wordBreakMode >= 2) ? 3 : 1;
                     } else {
-                        $wordBreakMode = ($wordBreakMode > 0) ? 2: 0;
+                        $wordBreakMode = ($wordBreakMode > 0) ? 2 : 0;
                     }
                 } elseif ($this->outlineLength === 0) {
                     for ($i = 0; $i < $this->charHeight; $i++) {
                         if ($this->rightToLeft === 1 && $this->outputWidth > 1) {
                             $offset = (strlen($this->currentChar[$i]) - $this->outlineLengthLimit);
-                            $this->_putString(substr($this->currentChar[$i], $offset));
+                            $this->putString(substr($this->currentChar[$i], $offset));
                         } else {
-                            $this->_putString($this->currentChar[$i]);
+                            $this->putString($this->currentChar[$i]);
                         }
                     }
 
                     $wordBreakMode = -1;
                 } elseif ($char === ' ') {
                     if ($wordBreakMode === 2) {
-                        $this->_splitLine();
+                        $this->splitLine();
                     } else {
-                        $this->_appendLine();
+                        $this->appendLine();
                     }
 
                     $wordBreakMode = -1;
                 } else {
                     if ($wordBreakMode >= 2) {
-                        $this->_splitLine();
+                        $this->splitLine();
                     } else {
-                        $this->_appendLine();
+                        $this->appendLine();
                     }
 
                     $wordBreakMode = ($wordBreakMode === 3) ? 1 : 0;
@@ -516,7 +516,7 @@ class Figlet
         }
 
         if ($this->outlineLength !== 0) {
-            $this->_appendLine();
+            $this->appendLine();
         }
 
         return $this->output;
@@ -532,7 +532,7 @@ class Figlet
      * @param  string $string The string to add to the output
      * @return void
      */
-    protected function _putString($string)
+    protected function putString($string)
     {
         $length = strlen($string);
 
@@ -558,13 +558,13 @@ class Figlet
      *
      * @return void
      */
-    protected function _appendLine()
+    protected function appendLine()
     {
         for ($i = 0; $i < $this->charHeight; $i++) {
-            $this->_putString($this->outputLine[$i]);
+            $this->putString($this->outputLine[$i]);
         }
 
-        $this->_clearLine();
+        $this->clearLine();
     }
 
     /**
@@ -574,11 +574,11 @@ class Figlet
      *
      * @return void
      */
-    protected function _splitLine()
+    protected function splitLine()
     {
         $gotSpace = false;
         for ($i = ($this->inCharLineLength - 1); $i >= 0; $i--) {
-            if (!$gotSpace && $this->inCharLine[$i] === ' ') {
+            if (! $gotSpace && $this->inCharLine[$i] === ' ') {
                 $gotSpace  = true;
                 $lastSpace = $i;
             }
@@ -601,16 +601,16 @@ class Figlet
             $lastPart[$i] = $this->inCharLine[($lastSpace + 1 + $i)];
         }
 
-        $this->_clearLine();
+        $this->clearLine();
 
         for ($i = 0; $i < $firstLength; $i++) {
-            $this->_addChar($firstPart[$i]);
+            $this->addChar($firstPart[$i]);
         }
 
-        $this->_appendLine();
+        $this->appendLine();
 
         for ($i = 0; $i < $lastLength; $i++) {
-            $this->_addChar($lastPart[$i]);
+            $this->addChar($lastPart[$i]);
         }
     }
 
@@ -619,7 +619,7 @@ class Figlet
      *
      * @return void
      */
-    protected function _clearLine()
+    protected function clearLine()
     {
         for ($i = 0; $i < $this->charHeight; $i++) {
             $this->outputLine[$i] = '';
@@ -636,15 +636,15 @@ class Figlet
      * @param  string $char Character which to add to the output
      * @return bool
      */
-    protected function _addChar($char)
+    protected function addChar($char)
     {
-        $this->_getLetter($char);
+        $this->getLetter($char);
 
         if ($this->currentChar === null) {
             return true;
         }
 
-        $smushAmount = $this->_smushAmount();
+        $smushAmount = $this->smushAmount();
 
         if (($this->outlineLength + $this->currentCharWidth - $smushAmount) > $this->outlineLengthLimit
             || ($this->inCharLineLength + 1) > $this->inCharLineLengthLimit) {
@@ -657,7 +657,7 @@ class Figlet
 
                 for ($k = 0; $k < $smushAmount; $k++) {
                     $position            = ($this->currentCharWidth - $smushAmount + $k);
-                    $tempLine[$position] = $this->_smushem($tempLine[$position], $this->outputLine[$row][$k]);
+                    $tempLine[$position] = $this->smushem($tempLine[$position], $this->outputLine[$row][$k]);
                 }
 
                 $this->outputLine[$row] = $tempLine . substr($this->outputLine[$row], $smushAmount);
@@ -674,7 +674,7 @@ class Figlet
                         $leftChar = null;
                     }
 
-                    $this->outputLine[$row][$position] = $this->_smushem($leftChar, $this->currentChar[$row][$k]);
+                    $this->outputLine[$row][$position] = $this->smushem($leftChar, $this->currentChar[$row][$k]);
                 }
 
                 $this->outputLine[$row] .= substr($this->currentChar[$row], $smushAmount);
@@ -693,10 +693,10 @@ class Figlet
      * @param  string $char The character from which to get the letter of
      * @return void
      */
-    protected function _getLetter($char)
+    protected function getLetter($char)
     {
-        if (array_key_exists($this->_uniOrd($char), $this->charList)) {
-            $this->currentChar       = $this->charList[$this->_uniOrd($char)];
+        if (array_key_exists($this->uniOrd($char), $this->charList)) {
+            $this->currentChar       = $this->charList[$this->uniOrd($char)];
             $this->previousCharWidth = $this->currentCharWidth;
             $this->currentCharWidth  = strlen($this->currentChar[0]);
         } else {
@@ -710,7 +710,7 @@ class Figlet
      *
      * @return int
      */
-    protected function _smushAmount()
+    protected function smushAmount()
     {
         if (($this->smushMode & (self::SM_SMUSH | self::SM_KERN)) === 0) {
             return 0;
@@ -722,7 +722,7 @@ class Figlet
             if ($this->rightToLeft === 1) {
                 $charbd = strlen($this->currentChar[$row]);
                 while (true) {
-                    if (!isset($this->currentChar[$row][$charbd])) {
+                    if (! isset($this->currentChar[$row][$charbd])) {
                         $leftChar = null;
                     } else {
                         $leftChar = $this->currentChar[$row][$charbd];
@@ -737,7 +737,7 @@ class Figlet
 
                 $linebd = 0;
                 while (true) {
-                    if (!isset($this->outputLine[$row][$linebd])) {
+                    if (! isset($this->outputLine[$row][$linebd])) {
                         $rightChar = null;
                     } else {
                         $rightChar = $this->outputLine[$row][$linebd];
@@ -754,7 +754,7 @@ class Figlet
             } else {
                 $linebd = strlen($this->outputLine[$row]);
                 while (true) {
-                    if (!isset($this->outputLine[$row][$linebd])) {
+                    if (! isset($this->outputLine[$row][$linebd])) {
                         $leftChar = null;
                     } else {
                         $leftChar = $this->outputLine[$row][$linebd];
@@ -769,7 +769,7 @@ class Figlet
 
                 $charbd = 0;
                 while (true) {
-                    if (!isset($this->currentChar[$row][$charbd])) {
+                    if (! isset($this->currentChar[$row][$charbd])) {
                         $rightChar = null;
                     } else {
                         $rightChar = $this->currentChar[$row][$charbd];
@@ -787,8 +787,8 @@ class Figlet
 
             if (empty($leftChar) || $leftChar === ' ') {
                 $amount++;
-            } elseif (!empty($rightChar)) {
-                if ($this->_smushem($leftChar, $rightChar) !== null) {
+            } elseif (! empty($rightChar)) {
+                if ($this->smushem($leftChar, $rightChar) !== null) {
                     $amount++;
                 }
             }
@@ -818,7 +818,7 @@ class Figlet
      * @param  string $rightChar Right character to smush
      * @return string
      */
-    protected function _smushem($leftChar, $rightChar)
+    protected function smushem($leftChar, $rightChar)
     {
         if ($leftChar === ' ') {
             return $rightChar;
@@ -944,16 +944,16 @@ class Figlet
      * @throws Exception\UnexpectedValueException When font file is not a FIGlet 2 font file
      * @return void
      */
-    protected function _loadFont($fontFile)
+    protected function loadFont($fontFile)
     {
         // Check if the font file exists
-        if (!file_exists($fontFile)) {
+        if (! file_exists($fontFile)) {
             throw new Exception\RuntimeException($fontFile . ': Font file not found');
         }
 
         // Check if gzip support is required
         if (substr($fontFile, -3) === '.gz') {
-            if (!function_exists('gzcompress')) {
+            if (! function_exists('gzcompress')) {
                 throw new Exception\RuntimeException('GZIP library is required for gzip compressed font files');
             }
 
@@ -970,12 +970,12 @@ class Figlet
         }
 
         // If the file is not compressed, lock the stream
-        if (!$compressed) {
+        if (! $compressed) {
             flock($fp, LOCK_SH);
         }
 
         // Get magic
-        $magic = $this->_readMagic($fp);
+        $magic = $this->readMagic($fp);
 
         // Get the header
         $line = fgets($fp, 1000) ?: '';
@@ -1019,7 +1019,7 @@ class Figlet
         $this->maxLength += 100;
 
         // See if we have to override smush settings
-        $this->_setUsedSmush();
+        $this->setUsedSmush();
 
         // Get left to right value
         if ($this->rightToLeft === null) {
@@ -1033,17 +1033,17 @@ class Figlet
 
         // Skip all comment lines
         for ($line = 1; $line <= $cmtLines; $line++) {
-            $this->_skipToEol($fp);
+            $this->skipToEol($fp);
         }
 
         // Fetch all ASCII characters
         for ($asciiCode = 32; $asciiCode < 127; $asciiCode++) {
-            $this->charList[$asciiCode] = $this->_loadChar($fp);
+            $this->charList[$asciiCode] = $this->loadChar($fp);
         }
 
         // Fetch all german characters
         foreach ($this->germanChars as $uniCode) {
-            $char = $this->_loadChar($fp);
+            $char = $this->loadChar($fp);
 
             if ($char === false) {
                 fclose($fp);
@@ -1056,7 +1056,7 @@ class Figlet
         }
 
         // At the end fetch all extended characters
-        while (!feof($fp)) {
+        while (! feof($fp)) {
             // Get the Unicode
             $uniCode = fgets($fp, 2048);
 
@@ -1082,7 +1082,7 @@ class Figlet
             }
 
             // Now fetch the character
-            $char = $this->_loadChar($fp);
+            $char = $this->loadChar($fp);
 
             if ($char === false) {
                 fclose($fp);
@@ -1103,7 +1103,7 @@ class Figlet
      *
      * @return void
      */
-    protected function _setUsedSmush()
+    protected function setUsedSmush()
     {
         if ($this->smushOverride === self::SMO_NO) {
             $this->smushMode = $this->fontSmush;
@@ -1120,7 +1120,7 @@ class Figlet
      * @param  resource $fp File pointer to the font file
      * @return string
      */
-    protected function _readMagic($fp)
+    protected function readMagic($fp)
     {
         $magic = '';
 
@@ -1137,10 +1137,10 @@ class Figlet
      * @param  resource $fp File pointer to the font file
      * @return void
      */
-    protected function _skipToEol($fp)
+    protected function skipToEol($fp)
     {
         $dummy = fgetc($fp);
-        while ($dummy !== false && !feof($fp)) {
+        while ($dummy !== false && ! feof($fp)) {
             if ($dummy === "\n") {
                 return;
             }
@@ -1148,7 +1148,7 @@ class Figlet
             if ($dummy === "\r") {
                 $dummy = fgetc($fp);
 
-                if (!feof($fp) && $dummy !== "\n") {
+                if (! feof($fp) && $dummy !== "\n") {
                     fseek($fp, -1, SEEK_SET);
                 }
 
@@ -1165,7 +1165,7 @@ class Figlet
      * @param  resource $fp File pointer to the font file
      * @return array
      */
-    protected function _loadChar($fp)
+    protected function loadChar($fp)
     {
         $char = [];
 
@@ -1192,7 +1192,7 @@ class Figlet
      * @param  string $c The char to get the value from
      * @return int
      */
-    protected function _uniOrd($c)
+    protected function uniOrd($c)
     {
         $h = ord($c[0]);
 

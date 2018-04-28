@@ -125,7 +125,10 @@ class TableTest extends TestCase
 
     public function testColumnSetColSpanInvalidArgument()
     {
-        $this->expectException('Zend\Text\Table\Exception\InvalidArgumentException', 'must be an integer and greater than 0');
+        $this->expectException(
+            'Zend\Text\Table\Exception\InvalidArgumentException',
+            'must be an integer and greater than 0'
+        );
         $column = new Table\Column(null, null, 0);
     }
 
@@ -133,7 +136,10 @@ class TableTest extends TestCase
     {
         $column = new Table\Column();
 
-        $this->expectException('Zend\Text\Table\Exception\InvalidArgumentException', 'must be an integer and greater than 0');
+        $this->expectException(
+            'Zend\Text\Table\Exception\InvalidArgumentException',
+            'must be an integer and greater than 0'
+        );
         $column->render(0);
     }
 
@@ -208,7 +214,10 @@ class TableTest extends TestCase
         $row->appendColumn(new Table\Column("foo\nbar"));
         $row->appendColumn(new Table\Column("foobar"));
 
-        $this->assertEquals($row->render([10, 10], $decorator), "│foo       │foobar    │\n│bar       │          │\n");
+        $this->assertEquals(
+            $row->render([10, 10], $decorator),
+            "│foo       │foobar    │\n│bar       │          │\n"
+        );
     }
 
     public function testUnicodeRowMultiLine()
@@ -219,7 +228,10 @@ class TableTest extends TestCase
         $row->appendColumn(new Table\Column("föö\nbär"));
         $row->appendColumn(new Table\Column("fööbär"));
 
-        $this->assertEquals($row->render([3, 10], $decorator), "│föö│fööbär    │\n│bär│          │\n");
+        $this->assertEquals(
+            $row->render([3, 10], $decorator),
+            "│föö│fööbär    │\n│bär│          │\n"
+        );
     }
 
     public function testTableConstructInvalidColumnWidthsItem()
@@ -271,7 +283,10 @@ class TableTest extends TestCase
         $row->createColumn('foobar');
         $table->appendRow($row);
 
-        $this->assertEquals($table->render(), "┌──────────┐\n│foobar    │\n└──────────┘\n");
+        $this->assertEquals(
+            $table->render(),
+            "┌──────────┐\n│foobar    │\n└──────────┘\n"
+        );
     }
 
     public function testDefaultColumnAlign()
@@ -282,7 +297,10 @@ class TableTest extends TestCase
 
         $table->appendRow(['foobar']);
 
-        $this->assertEquals($table->render(), "┌──────────┐\n│  foobar  │\n└──────────┘\n");
+        $this->assertEquals(
+            $table->render(),
+            "┌──────────┐\n│  foobar  │\n└──────────┘\n"
+        );
     }
 
     public function testRowGetColumns()
@@ -331,11 +349,14 @@ class TableTest extends TestCase
         $row->appendColumn(new Table\Column('foobar', null, 2));
         $table->appendRow($row);
 
-        $this->assertEquals($table->render(),   "┌──────────┬──────────┐\n"
-                                              . "│foobar    │foobar    │\n"
-                                              . "├──────────┴──────────┤\n"
-                                              . "│foobar               │\n"
-                                              . "└─────────────────────┘\n");
+        $this->assertEquals(
+            $table->render(),
+            "┌──────────┬──────────┐\n"
+            . "│foobar    │foobar    │\n"
+            . "├──────────┴──────────┤\n"
+            . "│foobar               │\n"
+            . "└─────────────────────┘\n"
+        );
     }
 
     public function testTableComplex()
@@ -362,15 +383,18 @@ class TableTest extends TestCase
         $row->appendColumn(new Table\Column('foobar'));
         $table->appendRow($row);
 
-        $this->assertEquals($table->render(),   "┌──────────┬─────────────────────┐\n"
-                                              . "│foobar    │foobar               │\n"
-                                              . "├──────────┼─────────────────────┤\n"
-                                              . "│foobar    │foobar               │\n"
-                                              . "├──────────┴─────────────────────┤\n"
-                                              . "│foobar                          │\n"
-                                              . "├──────────┬──────────┬──────────┤\n"
-                                              . "│foobar    │foobar    │foobar    │\n"
-                                              . "└──────────┴──────────┴──────────┘\n");
+        $this->assertEquals(
+            $table->render(),
+            "┌──────────┬─────────────────────┐\n"
+            . "│foobar    │foobar               │\n"
+            . "├──────────┼─────────────────────┤\n"
+            . "│foobar    │foobar               │\n"
+            . "├──────────┴─────────────────────┤\n"
+            . "│foobar                          │\n"
+            . "├──────────┬──────────┬──────────┤\n"
+            . "│foobar    │foobar    │foobar    │\n"
+            . "└──────────┴──────────┴──────────┘\n"
+        );
     }
 
     public function testTableMagicToString()
@@ -381,7 +405,10 @@ class TableTest extends TestCase
         $row->appendColumn(new Table\Column('foobar'));
         $table->appendRow($row);
 
-        $this->assertEquals((string) $table, "┌──────────┐\n│foobar    │\n└──────────┘\n");
+        $this->assertEquals(
+            (string) $table,
+            "┌──────────┐\n│foobar    │\n└──────────┘\n"
+        );
     }
 
     public function testDecoratorUnicode()

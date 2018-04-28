@@ -23,7 +23,7 @@ class Unicode implements Decorator
      */
     public function getTopLeft()
     {
-        return $this->_uniChar(0x250C);
+        return $this->uniChar(0x250C);
     }
 
     /**
@@ -33,7 +33,7 @@ class Unicode implements Decorator
      */
     public function getTopRight()
     {
-        return $this->_uniChar(0x2510);
+        return $this->uniChar(0x2510);
     }
 
     /**
@@ -43,7 +43,7 @@ class Unicode implements Decorator
      */
     public function getBottomLeft()
     {
-        return $this->_uniChar(0x2514);
+        return $this->uniChar(0x2514);
     }
 
     /**
@@ -53,7 +53,7 @@ class Unicode implements Decorator
      */
     public function getBottomRight()
     {
-        return $this->_uniChar(0x2518);
+        return $this->uniChar(0x2518);
     }
 
     /**
@@ -63,7 +63,7 @@ class Unicode implements Decorator
      */
     public function getVertical()
     {
-        return $this->_uniChar(0x2502);
+        return $this->uniChar(0x2502);
     }
 
     /**
@@ -73,7 +73,7 @@ class Unicode implements Decorator
      */
     public function getHorizontal()
     {
-        return $this->_uniChar(0x2500);
+        return $this->uniChar(0x2500);
     }
 
     /**
@@ -83,7 +83,7 @@ class Unicode implements Decorator
      */
     public function getCross()
     {
-        return $this->_uniChar(0x253C);
+        return $this->uniChar(0x253C);
     }
 
     /**
@@ -93,7 +93,7 @@ class Unicode implements Decorator
      */
     public function getVerticalRight()
     {
-        return $this->_uniChar(0x251C);
+        return $this->uniChar(0x251C);
     }
 
     /**
@@ -103,7 +103,7 @@ class Unicode implements Decorator
      */
     public function getVerticalLeft()
     {
-        return $this->_uniChar(0x2524);
+        return $this->uniChar(0x2524);
     }
 
     /**
@@ -113,7 +113,7 @@ class Unicode implements Decorator
      */
     public function getHorizontalDown()
     {
-        return $this->_uniChar(0x252C);
+        return $this->uniChar(0x252C);
     }
 
     /**
@@ -123,7 +123,7 @@ class Unicode implements Decorator
      */
     public function getHorizontalUp()
     {
-        return $this->_uniChar(0x2534);
+        return $this->uniChar(0x2534);
     }
 
     /**
@@ -132,7 +132,7 @@ class Unicode implements Decorator
      * @param  int $code
      * @return string|false
      */
-    protected function _uniChar($code)
+    protected function uniChar($code)
     {
         if ($code <= 0x7F) {
             $char = chr($code);
@@ -140,11 +140,11 @@ class Unicode implements Decorator
             $char = chr(0xC0 | $code >> 6)
                   . chr(0x80 | $code & 0x3F);
         } elseif ($code <= 0xFFFF) {
-            $char =  chr(0xE0 | $code >> 12)
+            $char = chr(0xE0 | $code >> 12)
                   . chr(0x80 | $code >> 6 & 0x3F)
                   . chr(0x80 | $code & 0x3F);
         } elseif ($code <= 0x10FFFF) {
-            $char =  chr(0xF0 | $code >> 18)
+            $char = chr(0xF0 | $code >> 18)
                   . chr(0x80 | $code >> 12 & 0x3F)
                   . chr(0x80 | $code >> 6 & 0x3F)
                   . chr(0x80 | $code & 0x3F);
