@@ -9,6 +9,7 @@
 
 namespace ZendTest\Text;
 
+use PHPUnit\Framework\TestCase;
 use Zend\Text\Table;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Text\Table\Decorator;
@@ -16,7 +17,7 @@ use Zend\Text\Table\Decorator;
 /**
  * @group      Zend_Text
  */
-class TableTest extends \PHPUnit_Framework_TestCase
+class TableTest extends TestCase
 {
     public function tearDown()
     {
@@ -112,19 +113,19 @@ class TableTest extends \PHPUnit_Framework_TestCase
 
     public function testColumnSetContentInvalidArgument()
     {
-        $this->setExpectedException('Zend\Text\Table\Exception\InvalidArgumentException', 'must be a string');
+        $this->expectException('Zend\Text\Table\Exception\InvalidArgumentException', 'must be a string');
         $column = new Table\Column(1);
     }
 
     public function testColumnSetAlignInvalidArgument()
     {
-        $this->setExpectedException('Zend\Text\Table\Exception\OutOfBoundsException', 'Invalid align supplied');
+        $this->expectException('Zend\Text\Table\Exception\OutOfBoundsException', 'Invalid align supplied');
         $column = new Table\Column(null, false);
     }
 
     public function testColumnSetColSpanInvalidArgument()
     {
-        $this->setExpectedException('Zend\Text\Table\Exception\InvalidArgumentException', 'must be an integer and greater than 0');
+        $this->expectException('Zend\Text\Table\Exception\InvalidArgumentException', 'must be an integer and greater than 0');
         $column = new Table\Column(null, null, 0);
     }
 
@@ -132,7 +133,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     {
         $column = new Table\Column();
 
-        $this->setExpectedException('Zend\Text\Table\Exception\InvalidArgumentException', 'must be an integer and greater than 0');
+        $this->expectException('Zend\Text\Table\Exception\InvalidArgumentException', 'must be an integer and greater than 0');
         $column->render(0);
     }
 
@@ -177,7 +178,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $row->appendColumn(new Table\Column());
         $row->appendColumn(new Table\Column());
 
-        $this->setExpectedException('Zend\Text\Table\Exception\OverflowException', 'Too many columns');
+        $this->expectException('Zend\Text\Table\Exception\OverflowException', 'Too many columns');
         $row->render([10], $decorator);
     }
 
@@ -185,7 +186,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     {
         $row = new Table\Row();
 
-        $this->setExpectedException('Zend\Text\Table\Exception\UnexpectedValueException', 'render() must be called');
+        $this->expectException('Zend\Text\Table\Exception\UnexpectedValueException', 'render() must be called');
         $row->getColumnWidths();
     }
 
@@ -223,7 +224,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 
     public function testTableConstructInvalidColumnWidthsItem()
     {
-        $this->setExpectedException('Zend\Text\Table\Exception\InvalidArgumentException', 'invalid column width');
+        $this->expectException('Zend\Text\Table\Exception\InvalidArgumentException', 'invalid column width');
         $table = new Table\Table(['columnWidths' => ['foo']]);
     }
 
@@ -313,7 +314,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     {
         $table = new Table\Table(['columnWidths' => [10]]);
 
-        $this->setExpectedException('Zend\Text\Table\Exception\UnexpectedValueException', 'No rows were added');
+        $this->expectException('Zend\Text\Table\Exception\UnexpectedValueException', 'No rows were added');
         $table->render();
     }
 
