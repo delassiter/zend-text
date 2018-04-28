@@ -40,5 +40,16 @@
         "psr-4": {
             "ZendTest\\Text\\": "test/"
         }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpnit --colors=always --coverage-clover clover.xml"
+
     }
 }
