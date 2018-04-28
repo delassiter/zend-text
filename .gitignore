@@ -9,7 +9,7 @@ nbproject
 doc/html/
 tmp/
 zf-mkdoc-theme/
-
+docs/html/
 clover.xml
 composer.lock
 coveralls-upload.json

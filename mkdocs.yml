@@ -1,5 +1,5 @@
-docs_dir: doc/book
-site_dir: doc/html
+docs_dir: docss/book
+site_dir: docss/html
 pages:
     - index.md
     - Figlets: figlet.md
